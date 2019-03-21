@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <title>Falstad Problem Generator</title>
+  <link href="https://fonts.googleapis.com/css?family=Quicksand|Source+Sans+Pro" rel="stylesheet">
+
+  <style>
+
+    body {
+      background-color: #eeeeec;
+      height:100%;
+      text-align: center;
+    }
+
+    body {
+      font-family: 'Source Sans Pro', sans-serif;
+      color: #262c50;
+      font-size: 14px;
+    }
+    
+    h1 {
+      font-family: 'Quicksand', bold;
+    }
+
+    button, input {
+      font-family: 'Source Sans Pro', sans-serif, bold;
+      color: #262c50;
+      font-size: 14px;
+      background-color: #ffffff;
+      padding: 8px;
+      padding-bottom: 5px;
+      margin-top: 3px;
+      margin-bottom: 3px;
+      border-width: 1px;
+      border-color: #262c50;
+      border-radius: 2px;
+      box-shadow: 0 3px #555;
+      transform: translateY(-2px);
+    }
+
+    button:active {
+      background-color: #3e8e41;
+      box-shadow: 0 1px #333;
+      transform: translateY(0px);
+      
+    }
+
+    button:hover {background-color: #cbd6fc;}
+    button:focus {background-color: #b6c5fb;}
+
+    canvas, div {
+      margin: auto;
+      margin-top: 20px;
+    }
+
+    canvas {
+      top: 0%;
+      width: 512px;
+      height: 256px;
+      box-shadow: 0px 4px 10px -4px rgba(0,0,0,0.75);
+      background-color: white;
+      border-radius: 3px;
+    }
+    
+    div {
+      text-align: left;
+      padding: 12px;
+      width: 488px;
+      box-shadow: 0px 4px 10px -4px rgba(0,0,0,0.75);
+      background-color: white;
+      border-radius: 3px;
+    }
+    
+    
+  </style>
+  </head>
+  <body>
+
+    <div>
+      <h1>1105 Practice Circuit Generator V0.1</h1>
+      <p>ya im going to make my own damn robot. this thing generates circuits for falstad circuit simulator. it only works more than half the time, so be careful of auto-generated paradoxes.</p>
+      
+      <button type="button" onclick="seed.value = Math.floor(Math.random() * 1105)">Random Seed</button>
+      <input type="number" id="seed" value="1105"><br>
+      <br>
+        <button id="generate" type="button" onclick="generateA();">Generate [something] Problem</button>
+        <button id="generate" type="button" onclick="alert('This is not implemented yet hahahahaha')">Generate Op-Amp Problem</button>
+      </br>
+      
+    </div>
+    
+    <script>
+
+
+    /* Copyright (C) 2019 Neal Nicdao
+     * 
+     * Licensed under the Holy Open Software License of the Computer Gods V1
+     * 
+     * This software comes with ABSOLUTELY NO WARANTEEEEE. By plagiarizing the work,
+     * you agree to the HIGHEST POSSIBLE PUNISHMENT from the the might of the
+     * COMPUTER GODS through rolling the DICE.
+     */
+
+    var seed = document.getElementById("seed");
+    var randomizer = "yes this string is used to generate random numbers but why. this is a terrible solution but i'm lazy. it seems to kind of work though at least throuh moist moist moist ?sdf[a[[w83yvnw89mc3  6b8asdAN aksD lajdASFj;sopg[9resy-9suv0t-9u38=-120=01294=092(*^^$!@@%RTFGIUyb86bas9ydas0dyna0cws89a";
+    var eeTwelve = [10, 12, 15, 18, 22, 27, 33, 47, 56, 68, 82];
+
+    //pseudo pseudo random number generator
+    var pprng = {
+        numberr: 0,
+        setSeed: function(s) {
+            this.numberr = Math.abs(s * Math.sin(s) * 42);
+        },
+        nextInt: function(aNumber) {
+            if (aNumber <= 0) return 0;
+            // random shit to cause randomness
+            this.numberr += aNumber;
+            var returnMe = Math.floor(this.numberr % aNumber);
+            this.numberr += randomizer.charCodeAt(this.numberr % randomizer.length);
+            return returnMe;
+        }
+        
+    }
+
+    var createComponent = function(type, position, value) {
+        returnMe = type + " " + position.join(" ") + " ";
+        
+        if (type == "r" || type == "i") {
+            returnMe += "0 " + value;
+        } else if (type == "v") {
+            returnMe += "0 0 40 " + value +" 0 0 0.5";
+        } else if (type == "w") {
+            returnMe += "0";
+        } else if (type == "x") {
+            returnMe += " 4 16 " + value;
+        }
+        
+        return returnMe;
+    }
+
+    var generateA = function() {
+    
+        var aaa = "";
+        var componentCount = 10; // component includes wire btw;
+    
+        var componentPositions = [
+            [80, 112, 336, 112],
+            [80, 112, 80, 224],
+            [336, 224, 336, 112],
+            [80, 224, 208, 224],
+            [208, 224, 336, 224],
+            [80, 224, 80, 352],
+            [208, 224, 208, 352],
+            [336, 224, 336, 352],
+            [80, 352, 208, 352],
+            [208, 352, 336, 352]
+        ];
+        
+        var textPositions = [
+            [200, 140, 220, 143],
+            [42, 173, 62, 176],
+            [296, 173, 316, 176],
+            [136, 252, 156, 255],
+            [262, 254, 282, 257],
+            [41, 294, 61, 297],
+            [167, 294, 187, 297],
+            [291, 292, 311, 295],
+            [136, 378, 156, 381],
+            [264, 379, 293, 382]
+        ];
+        
+        var components = [];
+        var componentValues = [];
+        
+        pprng.setSeed(Number(seed.value));
+        
+        // These always add to 10 at the end
+        var voltageSrcCount = 1 + pprng.nextInt(4);
+        var currentSrcCount = 0;
+        var resistorCount = 0;
+        var wireCount = 0;
+        
+        if (pprng.nextInt(100) < 69 * 2) {
+            // (69 * 2)% chance of having current sources
+            currentSrcCount = pprng.nextInt(voltageSrcCount + 1);
+            voltageSrcCount -= currentSrcCount;
+        }
+        
+        resistorCount = 2 + pprng.nextInt(componentCount - currentSrcCount - voltageSrcCount - 2);
+        
+        wireCount = (componentCount - currentSrcCount - voltageSrcCount - resistorCount);
+        
+        console.log("Voltage sources: " + voltageSrcCount);
+        console.log("Current sources: " + currentSrcCount);
+        console.log("Resistors: " + resistorCount);
+        console.log("Wires: " + wireCount);
+        
+        for (var i = 0; i < voltageSrcCount; i ++)
+        {
+            components.push("v");
+            componentValues.push(["1.5", "3", "5", "18", "24", "48"][pprng.nextInt(6)]);
+        }
+        
+        for (var i = 0; i < currentSrcCount; i ++)
+        {
+            components.push("i");
+            componentValues.push(["0.00981", "0.01", "0.02", "0.5", "1", "2"][pprng.nextInt(6)]);
+        }
+        
+        for (var i = 0; i < resistorCount; i ++)
+        {
+            components.push("r");
+            componentValues.push(eeTwelve[pprng.nextInt(11)] * Math.pow(10, 1 + pprng.nextInt(3)));
+        }
+        
+        for (var i = 0; i < wireCount; i ++)
+        {
+            components.push("w");
+            componentValues.push(0);
+        }
+        
+        // Shuffle it!
+        
+        for (var i = 0; i < componentCount; i ++)
+        {
+            swapTo = pprng.nextInt(componentCount);
+            [components[i], components[swapTo]] = [components[swapTo], components[i]];
+            [componentValues[i], componentValues[swapTo]] = [componentValues[swapTo], componentValues[i]];
+        }
+        
+        // Randomly swap directions of source terminals
+        for (var i = 0; i < componentCount; i ++)
+        {
+            if (components[i] != "v" || components[i] != "i") continue; // XD
+            if (pprng.nextInt(100) < 50) continue; // XD
+            
+            // weird syntax
+            [componentPositions[i][0], componentPositions[i][2]] = [componentPositions[i][2], componentPositions[i][0]];
+            [componentPositions[i][1], componentPositions[i][3]] = [componentPositions[i][3], componentPositions[i][1]];
+        }
+        
+        var falstad = "";
+        
+        var countedVoltSrc = 0;
+        var countedCrrtSrc = 0;
+        var countedResistors = 0;
+        
+        for (var i = 0; i < componentCount; i ++)
+        {
+            // add the thing
+            falstad += createComponent(components[i], componentPositions[i], componentValues[i]) + "\n";
+            
+            var thing = 0;
+            if (components[i] == "v") {
+                thing = ++countedVoltSrc;
+            } else if (components[i] == "i") {
+                thing = ++countedCrrtSrc;
+            } else if (components[i] == "r") {
+                thing = ++countedResistors;
+            } else {
+                continue;
+            }
+            
+            // add text
+            falstad += createComponent("x", textPositions[i], components[i].toUpperCase() + thing) + "\n";
+        }
+        
+        // Add labels below
+        
+        falstad += createComponent("x", [74, 404, 290, 407], "Problem\\s\\h" + Number(seed.value)) + "\n";
+        
+        falstad += createComponent("x", [74, 432, 226, 435], "Solve\\sfor\\sPower\\sdissipated\\sby\\sR1");
+        
+        console.log(falstad);
+        window.open("https://www.falstad.com/circuit/circuitjs.html?cct=" + encodeURI(falstad));
+    }
+
+    </script>
+  </body>
+</html>
+

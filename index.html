@@ -94,7 +94,7 @@
 
     <div>
       <h1>1105 Practice Circuit Generator V0.1</h1>
-      <p>ya im going to make my own damn robot. this thing generates circuits for falstad circuit simulator. it only works more than half the time, so be careful of auto-generated paradoxes.</p>
+      <p>ya im going to make my own damn robot. this thing randomly generates circuits for falstad circuit simulator. it only works more than half the time, so be careful of auto-generated paradoxes.</p>
       <p id="moist">moiwst</p>
       <button type="button" style="width: 128px;" onclick="seed.value = Math.floor(Math.random() * 1105); seed.onchange();">Random Seed</button>
       <input type="number" style="width: 128px;" id="seed" value="1105"><br>
@@ -224,19 +224,19 @@
         for (var i = 0; i < voltageSrcCount; i ++)
         {
             components.push("v");
-            componentValues.push(["1.5", "3", "5", "18", "24", "48"][pprng.nextInt(6)]);
+            componentValues.push(["1.5", "3", "5", "12", "18"][pprng.nextInt(6)]);
         }
         
         for (var i = 0; i < currentSrcCount; i ++)
         {
             components.push("i");
-            componentValues.push(["0.00981", "0.01", "0.02", "0.5", "1", "2"][pprng.nextInt(6)]);
+            componentValues.push(["0.00981", "0.016", "0.024", "0.036"][pprng.nextInt(6)]);
         }
         
         for (var i = 0; i < resistorCount; i ++)
         {
             components.push("r");
-            componentValues.push(eeTwelve[pprng.nextInt(11)] * Math.pow(10, 1 + pprng.nextInt(3)));
+            componentValues.push(eeTwelve[pprng.nextInt(11)] * 10);
         }
         
         for (var i = 0; i < wireCount; i ++)
